@@ -7,15 +7,15 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { 
-  User, 
-  Mail, 
-  Calendar, 
-  Shield, 
-  Edit, 
-  Save, 
-  X, 
-  CheckCircle, 
+import {
+  User,
+  Mail,
+  Calendar,
+  Shield,
+  Edit,
+  Save,
+  X,
+  CheckCircle,
   AlertCircle,
   CreditCard,
   Settings,
@@ -52,9 +52,7 @@ export default function Profile() {
     setSuccess(null);
 
     try {
-      // Simuler une mise à jour (dans un vrai projet, vous appelleriez une API)
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
       setSuccess("Profil mis à jour avec succès !");
       setIsEditing(false);
     } catch (err) {
@@ -97,15 +95,16 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4">
       <div className="container mx-auto max-w-4xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               onClick={() => navigate("/")}
               className="flex items-center space-x-2"
+              aria-label="Retour à l'accueil"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Retour</span>
@@ -117,7 +116,7 @@ export default function Profile() {
               <p className="text-muted-foreground">Gérez vos informations personnelles</p>
             </div>
           </div>
-          <Button variant="outline" onClick={handleLogout}>
+          <Button variant="outline" onClick={handleLogout} className="border-red-500 text-red-600 hover:bg-red-50">
             <LogOut className="h-4 w-4 mr-2" />
             Déconnexion
           </Button>
@@ -125,14 +124,14 @@ export default function Profile() {
 
         {/* Messages */}
         {success && (
-          <Alert className="mb-6 border-green-200 bg-green-50">
+          <Alert className="mb-6 border-green-200 bg-green-50 animate-slide-down">
             <CheckCircle className="h-4 w-4 text-green-600" />
             <AlertDescription className="text-green-800">{success}</AlertDescription>
           </Alert>
         )}
-        
+
         {error && (
-          <Alert variant="destructive" className="mb-6">
+          <Alert variant="destructive" className="mb-6 animate-slide-down">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>{error}</AlertDescription>
           </Alert>
@@ -155,23 +154,29 @@ export default function Profile() {
           </TabsList>
 
           <TabsContent value="profile" className="space-y-6">
-            <Card>
+            <Card className="shadow-lg rounded-xl transition hover:scale-[1.01] bg-white dark:bg-gray-900">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Informations personnelles</CardTitle>
-                    <CardDescription>
-                      Gérez vos informations de base
-                    </CardDescription>
+                  <div className="flex items-center space-x-4">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center text-white text-2xl font-bold shadow">
+                      {user?.firstName?.[0]}
+                      {user?.lastName?.[0]}
+                    </div>
+                    <div>
+                      <CardTitle>Informations personnelles</CardTitle>
+                      <CardDescription>
+                        Gérez vos informations de base
+                      </CardDescription>
+                    </div>
                   </div>
                   {!isEditing ? (
-                    <Button onClick={() => setIsEditing(true)}>
+                    <Button onClick={() => setIsEditing(true)} className="bg-blue-600 text-white hover:bg-blue-700">
                       <Edit className="h-4 w-4 mr-2" />
                       Modifier
                     </Button>
                   ) : (
                     <div className="flex space-x-2">
-                      <Button onClick={handleSave} disabled={isLoading}>
+                      <Button onClick={handleSave} disabled={isLoading} className="bg-blue-600 text-white hover:bg-blue-700">
                         <Save className="h-4 w-4 mr-2" />
                         {isLoading ? "Sauvegarde..." : "Sauvegarder"}
                       </Button>
@@ -184,7 +189,7 @@ export default function Profile() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">Prénom</Label>
                     <div className="relative">
@@ -196,10 +201,11 @@ export default function Profile() {
                         onChange={handleInputChange}
                         disabled={!isEditing}
                         className="pl-10"
+                        aria-label="Prénom"
                       />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="lastName">Nom</Label>
                     <div className="relative">
@@ -211,12 +217,12 @@ export default function Profile() {
                         onChange={handleInputChange}
                         disabled={!isEditing}
                         className="pl-10"
+                        aria-label="Nom"
                       />
                     </div>
                   </div>
                 </div>
-                
-                <div className="space-y-2">
+                   <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -228,12 +234,13 @@ export default function Profile() {
                       onChange={handleInputChange}
                       disabled={!isEditing}
                       className="pl-10"
+                      aria-label="Email"
                     />
                   </div>
                 </div>
 
                 <Separator />
-                
+
                 <div className="space-y-2">
                   <Label>Date de création du compte</Label>
                   <div className="flex items-center space-x-2 text-muted-foreground">
@@ -246,7 +253,7 @@ export default function Profile() {
           </TabsContent>
 
           <TabsContent value="security" className="space-y-6">
-            <Card>
+            <Card className="shadow-lg rounded-xl transition hover:scale-[1.01] bg-white dark:bg-gray-900">
               <CardHeader>
                 <CardTitle>Sécurité du compte</CardTitle>
                 <CardDescription>
@@ -254,7 +261,7 @@ export default function Profile() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-lg hover:shadow transition">
                   <div>
                     <h3 className="font-medium">Changer le mot de passe</h3>
                     <p className="text-sm text-muted-foreground">
@@ -265,8 +272,8 @@ export default function Profile() {
                     Modifier
                   </Button>
                 </div>
-                
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+
+                <div className="flex items-center justify-between p-4 border rounded-lg hover:shadow transition">
                   <div>
                     <h3 className="font-medium">Authentification à deux facteurs</h3>
                     <p className="text-sm text-muted-foreground">
@@ -277,8 +284,8 @@ export default function Profile() {
                     Activer
                   </Button>
                 </div>
-                
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+
+                <div className="flex items-center justify-between p-4 border rounded-lg hover:shadow transition">
                   <div>
                     <h3 className="font-medium">Sessions actives</h3>
                     <p className="text-sm text-muted-foreground">
@@ -294,7 +301,7 @@ export default function Profile() {
           </TabsContent>
 
           <TabsContent value="preferences" className="space-y-6">
-            <Card>
+            <Card className="shadow-lg rounded-xl transition hover:scale-[1.01] bg-white dark:bg-gray-900">
               <CardHeader>
                 <CardTitle>Préférences</CardTitle>
                 <CardDescription>
@@ -302,7 +309,7 @@ export default function Profile() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center justify-between p-4 border rounded-lg hover:shadow transition">
                   <div>
                     <h3 className="font-medium">Notifications</h3>
                     <p className="text-sm text-muted-foreground">
@@ -313,8 +320,8 @@ export default function Profile() {
                     Configurer
                   </Button>
                 </div>
-                
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+
+                <div className="flex items-center justify-between p-4 border rounded-lg hover:shadow transition">
                   <div>
                     <h3 className="font-medium">Préférences de langue</h3>
                     <p className="text-sm text-muted-foreground">
@@ -325,8 +332,8 @@ export default function Profile() {
                     Français
                   </Button>
                 </div>
-                
-                <div className="flex items-center justify-between p-4 border rounded-lg">
+
+                <div className="flex items-center justify-between p-4 border rounded-lg hover:shadow transition">
                   <div>
                     <h3 className="font-medium">Thème</h3>
                     <p className="text-sm text-muted-foreground">
@@ -342,8 +349,10 @@ export default function Profile() {
           </TabsContent>
         </Tabs>
 
+        <Separator className="my-8" />
+        <h2 className="text-xl font-semibold mb-4 text-blue-700 dark:text-blue-300">Actions rapides</h2>
         {/* Quick Actions */}
-        <Card className="mt-8">
+        <Card className="mt-2 shadow-lg rounded-xl bg-white dark:bg-gray-900">
           <CardHeader>
             <CardTitle>Actions rapides</CardTitle>
             <CardDescription>
@@ -351,28 +360,28 @@ export default function Profile() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button 
-                variant="outline" 
-                className="h-20 flex flex-col space-y-2"
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <Button
+                variant="outline"
+                className="h-20 flex flex-col space-y-2 rounded-xl shadow hover:bg-blue-50 transition"
                 onClick={() => navigate("/dashboard")}
               >
                 <PieChart className="h-6 w-6" />
                 <span>Tableau de bord</span>
               </Button>
-              
-              <Button 
-                variant="outline" 
-                className="h-20 flex flex-col space-y-2"
+
+              <Button
+                variant="outline"
+                className="h-20 flex flex-col space-y-2 rounded-xl shadow hover:bg-blue-50 transition"
                 onClick={() => navigate("/transactions")}
               >
                 <CreditCard className="h-6 w-6" />
                 <span>Transactions</span>
               </Button>
-              
-              <Button 
-                variant="outline" 
-                className="h-20 flex flex-col space-y-2"
+
+              <Button
+                variant="outline"
+                className="h-20 flex flex-col space-y-2 rounded-xl shadow hover:bg-blue-50 transition"
                 onClick={() => navigate("/cards")}
               >
                 <CreditCard className="h-6 w-6" />
@@ -385,4 +394,3 @@ export default function Profile() {
     </div>
   );
 }
-
